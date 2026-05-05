@@ -1,0 +1,29 @@
+app:
+  timezone: America/New_York
+  output_dir: .local
+
+scan:
+  first_run_days: 90
+  daily_days: 1
+  include_older_unread_for_first_days: 5
+  older_unread_days: 90
+  max_messages_per_account: 100
+
+digest:
+  recipient_email: your-main-email@gmail.com
+  max_lines: 25
+  cleanup_suggestions_per_account: 2
+
+gmail:
+  client_secrets_file: credentials/google-oauth-client.json
+  token_dir: .local/tokens
+  accounts:
+    - name: primary
+      email: your-first-gmail@gmail.com
+
+sender:
+  provider: smtp
+
+whatsapp:
+  # Optional. Keep your real phone number only in ignored config.yaml.
+  phone_number: ""

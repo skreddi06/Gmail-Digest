@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gmail-digest"
+version = "0.1.0"
+description = "Read-only Gmail assistant that classifies inboxes and sends concise digests."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "google-api-python-client>=2.0.0",
+  "google-auth-oauthlib>=1.2.0",
+  "python-dotenv>=1.0.0",
+  "PyYAML>=6.0.0",
+]
+
+[project.optional-dependencies]
+ai = [
+  "openai>=1.99.0",
+  "pydantic>=2.0.0",
+]
+dev = [
+  "pytest>=8.0.0",
+]
+
+[project.scripts]
+gmail-digest = "gmail_digest.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
