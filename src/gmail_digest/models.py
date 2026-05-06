@@ -8,6 +8,7 @@ from typing import Any
 
 class Category(StrEnum):
     IMPORTANT = "Important"
+    MAYBE = "Maybe Important"
     NEEDS_REPLY = "Needs Reply"
     MONEY = "Money / Bills / Subscriptions"
     SECURITY = "Security / Account Alert"
@@ -64,6 +65,7 @@ class Classification:
     security_related: bool = False
     cleanup_candidate: bool = False
     confidence: float = 0.5
+    priority_score: int = 0
 
     def to_dict(self) -> dict[str, Any]:
         data = asdict(self)

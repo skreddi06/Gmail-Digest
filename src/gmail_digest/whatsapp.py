@@ -18,12 +18,21 @@ def build_whatsapp_message(content: DigestContent) -> str:
         f"{content.account_name} Morning Digest",
         (
             f"Scanned {content.total_count}. Important: {content.important_count}. "
-            f"Needs reply: {content.needs_reply_count}. Money/security: {content.money_security_count}."
+            f"Needs reply: {content.needs_reply_count}. Money/security: {content.money_security_count}. "
+            f"Maybe: {content.maybe_count}."
         ),
     ]
+    if content.needs_reply:
+        lines.append("Needs reply:")
+        for item in content.needs_reply[:2]:
+            lines.append(f"- {item.sender}: {item.subject}")
     if content.important:
         lines.append("Top important:")
         for item in content.important[:2]:
+            lines.append(f"- {item.sender}: {item.subject}")
+    if content.maybe_important:
+        lines.append("Maybe important:")
+        for item in content.maybe_important[:2]:
             lines.append(f"- {item.sender}: {item.subject}")
     if content.cleanup:
         lines.append("Cleanup:")
