@@ -35,3 +35,27 @@ def test_marketing_email_is_cleanup_candidate():
     result = HybridClassifier().classify(message("Limited time sale", "Unsubscribe from this newsletter"))
     assert result.category == Category.MARKETING
     assert result.cleanup_candidate is True
+
+
+def test_marketing_question_is_not_needs_reply():
+    result = HybridClassifier().classify(
+        message("2 Gym Shorts for $20?!", "Limited time deal. Unsubscribe from this newsletter")
+    )
+    assert result.category == Category.MARKETING
+    assert result.needs_reply is False
+
+
+def test_direct_human_request_needs_reply():
+    result = HybridClassifier().classify(
+        message("Can you confirm the meeting?", "Please confirm if tomorrow works.", "alex@example.com")
+    )
+    assert result.category == Category.NEEDS_REPLY
+    assert result.needs_reply is True
+
+
+def test_borderline_human_message_is_maybe_important():
+    result = HybridClassifier().classify(
+        message("Interview document", "A document was shared with you for review.", "recruiter@example.com")
+    )
+    assert result.category == Category.MAYBE
+    assert result.needs_reply is False

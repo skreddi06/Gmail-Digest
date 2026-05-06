@@ -25,23 +25,26 @@ def render_html_digest(content: DigestContent, *, whatsapp_url: str | None = Non
 </head>
 <body style="margin:0;background:#f6f7f9;color:#111827;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;line-height:1.45;">
   <div style="max-width:720px;margin:0 auto;padding:32px 18px;">
-    <div style="padding:28px 28px 22px;background:#ffffff;border:1px solid #e6e8eb;border-radius:10px;">
-      <p style="margin:0 0 8px;color:#6b7280;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;">Gmail Digest</p>
+    <div style="padding:28px 28px 22px;background:#ffffff;border:1px solid #e6e8eb;border-radius:8px;">
+      <p style="margin:0 0 8px;color:#6b7280;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;">Executive Brief</p>
       <h1 style="margin:0;color:#111827;font-size:28px;line-height:1.15;font-weight:750;">{escape(content.account_name)} Morning Digest</h1>
-      <p style="margin:12px 0 0;color:#4b5563;font-size:15px;">A concise read-only scan of what needs your attention. No action was taken.</p>
+      <p style="margin:12px 0 0;color:#111827;font-size:16px;font-weight:650;">{escape(content.headline)}</p>
+      <p style="margin:8px 0 0;color:#4b5563;font-size:14px;">Read-only scan. No action was taken.</p>
       <div style="margin-top:22px;display:block;">
         {_stat_chip("Scanned", str(content.total_count))}
-        {_stat_chip("Important", str(content.important_count))}
+        {_stat_chip("Priority", str(content.important_count))}
         {_stat_chip("Needs reply", str(content.needs_reply_count))}
         {_stat_chip("Money/Security", str(content.money_security_count))}
+        {_stat_chip("Maybe", str(content.maybe_count))}
         {_stat_chip("Noise", str(content.noise_count))}
       </div>
       {_action_row(button)}
     </div>
 
     {_section("Important", "Highest-signal emails from this scan.", content.important)}
-    {_section("Needs Reply", "Messages that may need your response.", content.needs_reply)}
+    {_section("Needs Reply", "Direct requests or action items that may need your response.", content.needs_reply)}
     {_section("Money / Subscriptions / Security", "Bills, subscriptions, renewals, payments, or account alerts.", content.money_security)}
+    {_section("Maybe Important", "Borderline messages worth a quick look, kept out of the top priority lane.", content.maybe_important)}
     {_cleanup_section(content.cleanup)}
 
     <p style="margin:22px 0 0;text-align:center;color:#6b7280;font-size:13px;">No action was taken.</p>
@@ -72,7 +75,7 @@ def _section(title: str, subtitle: str, items: list[DigestEntry]) -> str:
     if items:
         body = "".join(_entry_card(item) for item in items)
     return f"""
-    <div style="margin-top:18px;padding:22px 24px;background:#ffffff;border:1px solid #e6e8eb;border-radius:10px;">
+    <div style="margin-top:18px;padding:22px 24px;background:#ffffff;border:1px solid #e6e8eb;border-radius:8px;">
       <h2 style="margin:0;color:#111827;font-size:18px;line-height:1.25;">{escape(title)}</h2>
       <p style="margin:6px 0 16px;color:#6b7280;font-size:14px;">{escape(subtitle)}</p>
       {body}
@@ -86,7 +89,7 @@ def _entry_card(item: DigestEntry) -> str:
       <div style="padding:14px 0;border-top:1px solid #eef0f2;">
         <p style="margin:0 0 4px;color:#111827;font-size:15px;font-weight:700;">{escape(item.sender)}</p>
         <p style="margin:0;color:#111827;font-size:14px;">{escape(item.subject)}</p>
-        <p style="margin:7px 0 0;color:#6b7280;font-size:13px;">{escape(reason)}</p>
+        <p style="margin:7px 0 0;color:#6b7280;font-size:13px;"><strong style="color:#374151;">Why this matters:</strong> {escape(reason)}</p>
       </div>
 """
 
@@ -105,7 +108,7 @@ def _cleanup_section(items: list[CleanupSuggestion]) -> str:
     else:
         body = _empty_item("No obvious repeat cleanup sender today.")
     return f"""
-    <div style="margin-top:18px;padding:22px 24px;background:#ffffff;border:1px solid #e6e8eb;border-radius:10px;">
+    <div style="margin-top:18px;padding:22px 24px;background:#ffffff;border:1px solid #e6e8eb;border-radius:8px;">
       <h2 style="margin:0;color:#111827;font-size:18px;line-height:1.25;">Cleanup Suggestions</h2>
       <p style="margin:6px 0 16px;color:#6b7280;font-size:14px;">Repeat marketing or newsletter sources worth reviewing.</p>
       {body}
